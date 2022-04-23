@@ -13,4 +13,5 @@ module "billing" {
   project  = var.command-project
   region = var.region
   billing-account = var.billing-account
+  depends_on=['api_setup']
 }
