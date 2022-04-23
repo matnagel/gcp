@@ -1,4 +1,4 @@
-variable "project" { 
+variable "command-project" { 
 	type = string 
 }
 
