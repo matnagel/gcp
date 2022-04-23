@@ -1,12 +1,10 @@
-import googleapiclient as gac
+import googleapiclient.discovery as gdiscovery
 import json
 
 
 class CloudBilling:
     def __init__(self):
-        self.billing_api = gac.discovery.build(
-            "cloudbilling", "v1", cache_discovery=False
-        )
+        self.billing_api = gdiscovery.build("cloudbilling", "v1", cache_discovery=False)
         self.projects = self.billing_api.get_projects()
 
     def disable_billing(self, project_id: str) -> None:

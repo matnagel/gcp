@@ -1,7 +1,7 @@
 import base64
 import json
 from typing import Optional
-from wrapper.cloudbilling import CloudBilling
+from wrapper.cloud_billing import CloudBilling
 from wrapper.environment_variables import EnvVariables
 
 
