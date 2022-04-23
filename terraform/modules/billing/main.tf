@@ -11,7 +11,7 @@ resource "random_string" "zip_id" {
   special = false
   upper = false
   keepers = {
-    md5 = filesha256(local.deploy_zip)
+    sha256 = filesha256(local.deploy_zip)
   }
 }
 
