@@ -27,6 +27,11 @@ resource "google_storage_bucket" "deployment-bucket" {
   uniform_bucket_level_access = true
 }
 
+resource "google_service_account" "check-billing" {
+  account_id   = "check-billing"
+  description = "Budget supervision"
+}
+
 resource "google_cloudfunctions_function" "billing-nuke" {
   name        = "billing-nuke"
   description = "Controls budget"
@@ -41,6 +46,8 @@ resource "google_cloudfunctions_function" "billing-nuke" {
   entry_point           = "check_billing"
 
   ingress_settings = "ALLOW_INTERNAL_ONLY"
+
+  service_account_email = google_service_account.check-billing.email
 
   event_trigger {
       event_type= "google.pubsub.topic.publish"
