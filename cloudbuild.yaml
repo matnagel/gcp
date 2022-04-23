@@ -1,0 +1,21 @@
+timeout: 30m
+options:
+  logging: GCS_ONLY
+logsBucket: ${_BUILD_LOG_BUCKET}
+steps:
+        - id: 'configuration'
+          name: 'google/cloud-sdk:381.0.0'
+          entrypoint: 'sh'
+          args: ['scripts/configure.sh']
+          env:
+          - CONFIG_BUCKET=${_CONFIG_BUCKET}
+
+        - id: 'build'
+          name: 'google/cloud-sdk:381.0.0'
+          entrypoint: 'sh'
+          args: ['scripts/build-python.sh']
+
+        - id: 'terraform'
+          name: 'hashicorp/terraform:1.1.7'
+          entrypoint: 'sh'
+          args: ['scripts/terraform-run.sh']

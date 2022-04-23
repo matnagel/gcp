@@ -1,0 +1,4 @@
+.local
+.tox
+.vscode
+__pycache__
