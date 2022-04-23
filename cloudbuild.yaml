@@ -18,4 +18,4 @@ steps:
         - id: 'terraform'
           name: 'hashicorp/terraform:1.1.7'
           entrypoint: 'sh'
-          args: ['scripts/terraform-run.sh']
+          args: ['scripts/terraform.sh']
