@@ -5,8 +5,8 @@ logsBucket: ${_BUILD_LOG_BUCKET}
 steps:
         - id: 'configuration'
           name: 'google/cloud-sdk:381.0.0'
-          entrypoint: 'sh'
-          args: ['make -f scripts/configure.mk']
+          entrypoint: 'make'
+          args: ['-f', 'scripts/configure.mk']
           env:
           - CONFIG_BUCKET=${_CONFIG_BUCKET}
 
