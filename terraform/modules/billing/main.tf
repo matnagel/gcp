@@ -7,7 +7,7 @@ resource "google_pubsub_topic" "budget-topic" {
 }
 
 resource "random_string" "zip_id" {
-  length = 8
+  length = 10
   special = false
   upper = false
   keepers = {
