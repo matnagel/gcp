@@ -20,5 +20,5 @@ resource "google_project_service" "functions_api" {
 
 resource "google_project_service" "billing_api" {
   project = var.project
-  service = "billingbudgets.googleapis.com"
+  service = "cloudbilling.googleapis.com"
 }
