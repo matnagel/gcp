@@ -8,9 +8,10 @@ class CloudBilling:
         self.billing_id = billing_id
         self.billing_api = gdiscovery.build("cloudbilling", "v1", cache_discovery=False)
         self.projects_api = self.billing_api.projects()
+        self.billing_account = self.billing_api.billingAccounts()
 
     def get_projects(self) -> Set[str]:
-        projects = self.billing_api.billingAccounts.projects.list(
+        projects = self.billing_account.projects.list(
             f"billingAccounts/{self.billing_id}"
         )
         return set(projects)
