@@ -9,6 +9,10 @@ class DataFormatException(Exception):
     pass
 
 
+class AggregateException(Exception):
+    pass
+
+
 def read_billing_information(data):
     if "data" not in data:
         raise DataFormatException("Called without billing notification data.")
@@ -23,7 +27,7 @@ def check_billing(
     data,
     _,
     environment: Optional[EnvVariables] = None,
-    billing: Optional[CloudBilling] = None,
+    cloud_billing: Optional[CloudBilling] = None,
 ):
 
     print("Checking billing notification")
@@ -36,28 +40,46 @@ def check_billing(
 
     billing_id = environment.get_billing_id()
 
-    if not billing:
-        billing = CloudBilling(billing_id)
+    if not cloud_billing:
+        cloud_billing = CloudBilling(billing_id)
 
-    projects = billing.get_projects(billing_id)
+    project_ids = cloud_billing.get_projects(billing_id)
 
     if cost_amount > budget_amount:
         print(f"Current costs: {cost_amount} are larger than budget {budget_amount}")
-        for project_id in projects:
-            disable_billing(project_id, billing)
+        execute_on_projects(
+            lambda p_id: disable_billing(p_id, cloud_billing), project_ids
+        )
         return
 
     if "alertThresholdExceeded" in info:
         alert = info["alertThresholdExceeded"]
         print(f"Alert threshold {alert} with costs {cost_amount} exceeded")
-        for project_id in projects:
-            disable_billing(project_id, billing)
+        execute_on_projects(
+            lambda p_id: disable_billing(p_id, cloud_billing), project_ids
+        )
         return
 
     print(f"No action necessary. Current cost are {cost_amount}.")
-    for project_id in projects:
-        billing_status = billing.is_billing_enabled(project_id)
-        print(f"{project_id} has billing enable: {billing_status}")
+    execute_on_projects(
+        lambda p_id: print_billing_status(cloud_billing, p_id), project_ids
+    )
+
+
+def print_billing_status(billing, project_id):
+    billing_status = billing.is_billing_enabled(project_id)
+    print(f"{project_id} has billing enable: {billing_status}")
+
+
+def execute_on_projects(f, project_ids):
+    exceptions = []
+    for project_id in project_ids:
+        try:
+            f(project_id)
+        except Exception as exc:
+            exceptions.append(exc)
+    if exceptions:
+        raise AggregateException(exceptions)
 
 
 def disable_billing(project_id: str, billing: CloudBilling):
