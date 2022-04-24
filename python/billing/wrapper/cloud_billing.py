@@ -12,7 +12,7 @@ class CloudBilling:
 
     def get_projects(self) -> Set[str]:
         billing_projects_api = self.billing_accounts_api.projects()
-        projects = billing_projects_api.list()
+        projects = billing_projects_api.list(name=self.billing_id)
         return set(projects)
 
     def disable_billing(self, project_id: str) -> None:
