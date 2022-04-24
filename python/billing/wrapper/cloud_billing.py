@@ -11,9 +11,8 @@ class CloudBilling:
         self.billing_accounts_api = self.billing_api.billingAccounts()
 
     def get_projects(self) -> Set[str]:
-        projects = self.billing_accounts_api.projects.list(
-            f"billingAccounts/{self.billing_id}"
-        )
+        billing_projects_api = self.billing_accounts_api.projects()
+        projects = billing_projects_api.list(f"billingAccounts/{self.billing_id}")
         return set(projects)
 
     def disable_billing(self, project_id: str) -> None:
