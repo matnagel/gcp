@@ -1,5 +1,4 @@
 import os
-from typing import Optional
 
 
 class EnvironmentException(Exception):
@@ -7,14 +6,14 @@ class EnvironmentException(Exception):
 
 
 class EnvVariables:
-    def get_env(self, name: str) -> Optional[str]:
-        return os.getenv(name)
+    def get_env(self, name: str) -> str:
+        env = os.getenv(name)
+        if env is None:
+            raise EnvironmentException(f"No environment variable {name}")
+        return env
 
     def get_project_id(self) -> str:
-        project_id = self.get_env("PROJECT_ID")
+        return self.get_env("PROJECT_ID")
 
-        if project_id is None:
-            raise EnvironmentException(
-                "No project specified in environment variable GCP_PROJECT"
-            )
-        return project_id
+    def get_billing_id(self) -> str:
+        return self.get_env("BILLING_ID")
