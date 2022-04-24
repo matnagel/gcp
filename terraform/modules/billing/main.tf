@@ -56,5 +56,6 @@ resource "google_cloudfunctions_function" "billing-nuke" {
 
   environment_variables = {
     PROJECT_ID = var.project
+    BILLING_ID = var.billing-account
   }
 }
