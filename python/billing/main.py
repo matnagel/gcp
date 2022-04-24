@@ -30,31 +30,34 @@ def check_billing(
     info = read_billing_information(data)
     cost_amount = info["costAmount"]
     budget_amount = info["budgetAmount"]
-    if not billing:
-        billing = CloudBilling()
 
     if not environment:
         environment = EnvVariables()
 
-    project_id = environment.get_project_id()
+    billing_id = environment.get_billing_id()
 
-    print(f"Considering project: {project_id}")
+    if not billing:
+        billing = CloudBilling(billing_id)
+
+    projects = billing.get_projects(billing_id)
 
     if cost_amount > budget_amount:
         print(f"Current costs: {cost_amount} are larger than budget {budget_amount}")
-        disable_billing(project_id, billing)
+        for project_id in projects:
+            disable_billing(project_id, billing)
         return
 
     if "alertThresholdExceeded" in info:
         alert = info["alertThresholdExceeded"]
         print(f"Alert threshold {alert} with costs {cost_amount} exceeded")
-        disable_billing(project_id, billing)
+        for project_id in projects:
+            disable_billing(project_id, billing)
         return
 
-    billing_status = billing.is_billing_enabled(project_id)
-    print(
-        f"No action necessary. Current cost are {cost_amount}, and is_billing_enabled: {billing_status}"
-    )
+    print(f"No action necessary. Current cost are {cost_amount}.")
+    for project_id in projects:
+        billing_status = billing.is_billing_enabled(project_id)
+        print(f"{project_id} has billing enable: {billing_status}")
 
 
 def disable_billing(project_id: str, billing: CloudBilling):
@@ -72,4 +75,4 @@ def disable_billing(project_id: str, billing: CloudBilling):
     if is_enabled:
         billing.disable_billing(project_id)
     else:
-        print("Billing already disabled")
+        print(f"Billing already disabled for {project_id}")
