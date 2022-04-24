@@ -43,7 +43,7 @@ def check_billing(
     if not cloud_billing:
         cloud_billing = CloudBilling(billing_id)
 
-    project_ids = cloud_billing.get_projects(billing_id)
+    project_ids = cloud_billing.get_projects()
 
     if cost_amount > budget_amount:
         print(f"Current costs: {cost_amount} are larger than budget {budget_amount}")
