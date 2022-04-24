@@ -1,18 +1,25 @@
 import googleapiclient.discovery as gdiscovery
 import json
+from typing import Set
 
 
 class CloudBilling:
     def __init__(self, billing_id: str):
         self.billing_id = billing_id
         self.billing_api = gdiscovery.build("cloudbilling", "v1", cache_discovery=False)
-        self.projects = self.billing_api.projects()
+        self.projects_api = self.billing_api.projects()
+
+    def get_projects(self) -> Set[str]:
+        projects = self.billing_api.billingAccounts.projects.list(
+            f"billingAccounts/{self.billing_id}"
+        )
+        return set(projects)
 
     def disable_billing(self, project_id: str) -> None:
         project_name = f"projects/{project_id}"
         body = {"billingAccountName": ""}  # Body to disable billing
         try:
-            res = self.projects.updateBillingInfo(
+            res = self.projects_api.updateBillingInfo(
                 name=project_name, body=body
             ).execute()
             print(f"Billing disabled: {json.dumps(res)}")
@@ -23,7 +30,7 @@ class CloudBilling:
 
     def is_billing_enabled(self, project_id: str) -> bool:
         project_name = f"projects/{project_id}"
-        res = self.projects.getBillingInfo(name=project_name).execute()
+        res = self.projects_api.getBillingInfo(name=project_name).execute()
 
         if "billingEnabled" in res:
             return bool(res["billingEnabled"])
