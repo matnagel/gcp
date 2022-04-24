@@ -6,13 +6,13 @@ import googleapiclient.discovery as gdiscovery
 class CloudBilling:
     def __init__(self, billing_id: str):
         self.billing_id = billing_id
-        self.billing_api = gdiscovery.build("cloudbilling", "v1", cache_discovery=False)
-        self.projects_api = self.billing_api.projects()
-        self.billing_accounts_api = self.billing_api.billingAccounts()
+        billing_api = gdiscovery.build("cloudbilling", "v1", cache_discovery=False)
+        self.projects_api = billing_api.projects()
+        self.billing_accounts_api = billing_api.billingAccounts()
 
     def get_projects(self) -> Set[str]:
         billing_projects_api = self.billing_accounts_api.projects()
-        projects = billing_projects_api.list(f"billingAccounts/{self.billing_id}")
+        projects = billing_projects_api.list()
         return set(projects)
 
     def disable_billing(self, project_id: str) -> None:
