@@ -3,7 +3,8 @@ import json
 
 
 class CloudBilling:
-    def __init__(self):
+    def __init__(self, billing_id: str):
+        self.billing_id = billing_id
         self.billing_api = gdiscovery.build("cloudbilling", "v1", cache_discovery=False)
         self.projects = self.billing_api.projects()
 

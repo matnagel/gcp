@@ -6,6 +6,8 @@ import pytest
 from unittest.mock import Mock, patch
 from main import check_billing
 
+import random
+
 
 @pytest.fixture
 def projects() -> Dict[str, bool]:
@@ -74,10 +76,11 @@ def test_over_budget(projects):
 def test_over_budget_with_disabled_billing(projects):
     with suppress_prints:
         data = generate_data(cost_amount=10, budget_amount=5)
-        p_id = "project-5"
+        projects_ids = list(projects.keys())
+        p_id = random.choice(projects_ids)
         projects[p_id] = False
         billing = MockCloudBilling(
-            project_ids=projects.keys(), billing_enabled=projects
+            project_ids=set(projects_ids), billing_enabled=projects
         )
         check_billing(data, None, environment=FakeEnvironment(), billing=billing)
         assert p_id not in billing.has_been_disabled
@@ -88,9 +91,11 @@ def test_unable_to_get_billing_information(projects):
         RuntimeError, match="Could not determine whether billing is enabled"
     ):
         data = generate_data(cost_amount=10, budget_amount=5)
-        project_ids = set(projects.keys())
-        p_id = "project-5"
+        project_ids = list(projects.keys())
+        p_id = random.choice(project_ids)
         del projects["project-5"]
-        billing = MockCloudBilling(project_ids=project_ids, billing_enabled=projects)
+        billing = MockCloudBilling(
+            project_ids=set(project_ids), billing_enabled=projects
+        )
         check_billing(data, None, environment=FakeEnvironment(), billing=billing)
     assert billing.has_been_disabled[p_id]
