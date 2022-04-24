@@ -83,4 +83,5 @@ def test_unable_to_get_billing_information(projects):
             project_ids=set(project_ids), billing_enabled=projects
         )
         check_billing(data, None, environment=FakeEnvironment(), billing=billing)
-    assert billing.has_been_disabled[p_id]
+    enabled = [billing.billing_enabled[p_id] for p_id in project_ids]
+    assert not any(enabled)
