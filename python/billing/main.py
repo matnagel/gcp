@@ -69,7 +69,7 @@ def disable_billing(project_id: str, billing: CloudBilling):
         )
         billing.disable_billing(project_id)
         raise RuntimeError(
-            "Could not determine whether billing is enabled, while trying to disable billing"
+            f"Could not determine whether billing is enabled for {project_id}, while trying to disable billing"
         ) from exception
 
     if is_enabled:
