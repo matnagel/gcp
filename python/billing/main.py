@@ -48,7 +48,7 @@ def check_billing(
     if cost_amount > budget_amount:
         print(f"Current costs: {cost_amount} are larger than budget {budget_amount}")
         execute_on_projects(
-            lambda p_id: disable_billing(p_id, cloud_billing), project_ids
+            lambda p_id: disable_billing(cloud_billing, p_id), project_ids
         )
         return
 
@@ -56,7 +56,7 @@ def check_billing(
         alert = info["alertThresholdExceeded"]
         print(f"Alert threshold {alert} with costs {cost_amount} exceeded")
         execute_on_projects(
-            lambda p_id: disable_billing(p_id, cloud_billing), project_ids
+            lambda p_id: disable_billing(cloud_billing, p_id), project_ids
         )
         return
 
@@ -66,7 +66,7 @@ def check_billing(
     )
 
 
-def print_billing_status(billing, project_id):
+def print_billing_status(billing: CloudBilling, project_id: str):
     billing_status = billing.is_billing_enabled(project_id)
     print(f"{project_id} has billing enable: {billing_status}")
 
@@ -82,7 +82,7 @@ def execute_on_projects(f, project_ids):
         raise AggregateException(exceptions)
 
 
-def disable_billing(project_id: str, billing: CloudBilling):
+def disable_billing(billing: CloudBilling, project_id: str):
     try:
         is_enabled = billing.is_billing_enabled(project_id)
     except Exception as exception:
