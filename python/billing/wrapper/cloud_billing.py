@@ -23,24 +23,22 @@ class CloudBilling:
 
         projects: List[Project] = []
 
-        request = billing_projects_api.list(name=billing_id, pageToken="").execute()
-        nextToken = request["nextPageToken"]
-
+        nextToken = ""
         pages = 0
-        while nextToken and pages < 10:
-            print(f"Token: {nextToken}")
-            for res in request["projectBillingInfo"]:
-                project = Project(res["projectId"], res["billingEnabled"])
-                projects.append(project)
+        finished = False
+
+        while finished and pages < 10:
             request = billing_projects_api.list(
                 name=billing_id, pageToken=nextToken
             ).execute()
+            for res in request["projectBillingInfo"]:
+                project = Project(res["projectId"], res["billingEnabled"])
+                projects.append(project)
             nextToken = request["nextPageToken"]
+            print(f"Token: {nextToken}")
+            if not nextToken:
+                finished = True
             pages += 1
-
-        for res in request["projectBillingInfo"]:
-            project = Project(res["projectId"], res["billingEnabled"])
-            projects.append(project)
 
         return projects
 
