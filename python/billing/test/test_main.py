@@ -1,16 +1,20 @@
 import json
 import base64
-from typing import Set, Dict
-from pytest import raises
+from typing import List, Dict
 import pytest
-from main import AggregateException, check_billing
+from main import check_billing
+from wrapper.cloud_billing import Project
 
 import random
 
 
 @pytest.fixture
-def projects() -> Dict[str, bool]:
-    return {"project-1": True, "project-2": True, "project-5": True}
+def projects() -> List[Project]:
+    return [
+        Project("project-1", True),
+        Project("project-2", True),
+        Project("project-5", True),
+    ]
 
 
 class FakeEnvironment:
@@ -19,29 +23,21 @@ class FakeEnvironment:
 
 
 class MockCloudBilling:
-    def __init__(
-        self, billing_id: str, project_ids: Set[str], billing_enabled: Dict[str, bool]
-    ):
+    def __init__(self, billing_id: str, projects: List[Project]):
         self.billing_id = billing_id
-        self.billing_enabled: Dict[str, bool] = billing_enabled
         self.has_been_disabled: Dict[str, bool] = dict()
-        self.project_ids = project_ids
+        self.projects = projects
 
     def get_projects(
         self,
-    ) -> Set[str]:
+    ) -> List[Project]:
         if self.billing_id == "1234-5678":
-            return self.project_ids
-        return set()
+            return self.projects
+        return []
 
-    def is_billing_enabled(self, project_id: str) -> bool:
-        if project_id not in self.billing_enabled:
-            raise RuntimeError(f"Unable to get billing information for {project_id}")
-        return self.billing_enabled[project_id]
-
-    def disable_billing(self, project_id: str) -> None:
-        self.billing_enabled[project_id] = False
-        self.has_been_disabled[project_id] = True
+    def disable_billing(self, project: Project) -> None:
+        project.is_billing = False
+        self.has_been_disabled[project.project_id] = True
 
 
 def generate_data(cost_amount: int, budget_amount: int):
@@ -52,65 +48,35 @@ def generate_data(cost_amount: int, budget_amount: int):
     return data
 
 
-def test_enough_budget(projects):
+def test_enough_budget(projects: List[Project]):
     data = generate_data(cost_amount=5, budget_amount=10)
     env = FakeEnvironment()
-    projects_ids = list(projects.keys())
     billing = MockCloudBilling(
         billing_id=env.get_billing_id(),
-        project_ids=projects_ids,
-        billing_enabled=projects,
+        projects=projects,
     )
     check_billing(data, None, environment=FakeEnvironment(), cloud_billing=billing)
-    enabled = [billing.billing_enabled[p_id] for p_id in projects.keys()]
+    enabled = [p.is_billing for p in projects]
     assert all(enabled)
 
 
-def test_over_budget(projects):
+def test_over_budget(projects: List[Project]):
     data = generate_data(cost_amount=10, budget_amount=5)
-    projects_ids = list(projects.keys())
     env = FakeEnvironment()
     billing = MockCloudBilling(
         billing_id=env.get_billing_id(),
-        project_ids=projects_ids,
-        billing_enabled=projects,
+        projects=projects,
     )
     check_billing(data, None, environment=FakeEnvironment(), cloud_billing=billing)
-    enabled = [billing.billing_enabled[p_id] for p_id in projects.keys()]
+    enabled = [p.is_billing for p in projects]
     assert not any(enabled)
 
 
-def test_over_budget_with_disabled_billing(projects):
+def test_over_budget_with_disabled_billing(projects: List[Project]):
     data = generate_data(cost_amount=10, budget_amount=5)
-    projects_ids = list(projects.keys())
-    p_id = random.choice(projects_ids)
-    projects[p_id] = False
+    p = random.choice(list(projects))
+    p.is_billing = False
     env = FakeEnvironment()
-    billing = MockCloudBilling(
-        billing_id=env.get_billing_id(),
-        project_ids=set(projects_ids),
-        billing_enabled=projects,
-    )
+    billing = MockCloudBilling(billing_id=env.get_billing_id(), projects=projects)
     check_billing(data, None, environment=FakeEnvironment(), cloud_billing=billing)
-    assert p_id not in billing.has_been_disabled
-
-
-def test_unable_to_get_billing_information(projects):
-    project_ids = list(projects.keys())
-    p_id = random.choice(project_ids)
-    del projects[p_id]
-    env = FakeEnvironment()
-
-    with raises(
-        AggregateException,
-        match=f"Could not determine whether billing is enabled for {p_id}",
-    ):
-        data = generate_data(cost_amount=10, budget_amount=5)
-        billing = MockCloudBilling(
-            billing_id=env.get_billing_id(),
-            project_ids=set(project_ids),
-            billing_enabled=projects,
-        )
-        check_billing(data, None, environment=FakeEnvironment(), cloud_billing=billing)
-    enabled = [billing.billing_enabled[p_id] for p_id in project_ids]
-    assert not any(enabled)
+    assert p.project_id not in billing.has_been_disabled

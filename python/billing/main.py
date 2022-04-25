@@ -1,7 +1,7 @@
 import base64
 import json
 from typing import Optional
-from wrapper.cloud_billing import CloudBilling
+from wrapper.cloud_billing import CloudBilling, Project
 from wrapper.environment_variables import EnvVariables
 
 
@@ -43,32 +43,26 @@ def check_billing(
     if not cloud_billing:
         cloud_billing = CloudBilling(billing_id)
 
-    project_ids = cloud_billing.get_projects()
+    projects = cloud_billing.get_projects()
 
     if cost_amount > budget_amount:
         print(f"Current costs: {cost_amount} are larger than budget {budget_amount}")
-        execute_on_projects(
-            lambda p_id: disable_billing(cloud_billing, p_id), project_ids
-        )
+        execute_on_projects(lambda p: disable_billing(cloud_billing, p), projects)
         return
 
     if "alertThresholdExceeded" in info:
         alert = info["alertThresholdExceeded"]
         print(f"Alert threshold {alert} with costs {cost_amount} exceeded")
-        execute_on_projects(
-            lambda p_id: disable_billing(cloud_billing, p_id), project_ids
-        )
+        execute_on_projects(lambda p: disable_billing(cloud_billing, p), projects)
         return
 
     print(f"No action necessary. Current cost are {cost_amount}.")
-    execute_on_projects(
-        lambda p_id: print_billing_status(cloud_billing, p_id), project_ids
-    )
+    for p in projects:
+        print_billing_status(p)
 
 
-def print_billing_status(billing: CloudBilling, project_id: str):
-    billing_status = billing.is_billing_enabled(project_id)
-    print(f"{project_id} has billing enable: {billing_status}")
+def print_billing_status(project: Project):
+    print(f"{project.project_id} has billing enable: {project.is_billing}")
 
 
 def execute_on_projects(f, project_ids):
@@ -82,19 +76,8 @@ def execute_on_projects(f, project_ids):
         raise AggregateException(exceptions)
 
 
-def disable_billing(billing: CloudBilling, project_id: str):
-    try:
-        is_enabled = billing.is_billing_enabled(project_id)
-    except Exception as exception:
-        print(
-            f"Unable to determine if billing is enabled on project {project_id}. Trying to disabling anyways."
-        )
-        billing.disable_billing(project_id)
-        raise RuntimeError(
-            f"Could not determine whether billing is enabled for {project_id}, while trying to disable billing"
-        ) from exception
-
-    if is_enabled:
-        billing.disable_billing(project_id)
+def disable_billing(billing: CloudBilling, project: Project):
+    if project.is_billing:
+        billing.disable_billing(project)
     else:
-        print(f"Billing already disabled for {project_id}")
+        print(f"Billing already disabled for {project.project_id}")
