@@ -30,7 +30,7 @@ class CloudBilling:
         while nextToken and pages < 10:
             print(f"Token: {nextToken}")
             for res in request["projectBillingInfo"]:
-                project = Project(res["project_id"], res["billingEnabled"])
+                project = Project(res["projectId"], res["billingEnabled"])
                 projects.append(project)
             request = billing_projects_api.list(
                 name=billing_id, pageToken=nextToken
