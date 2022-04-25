@@ -39,7 +39,7 @@ class CloudBilling:
             pages += 1
 
         for res in request["projectBillingInfo"]:
-            project = Project(res["project_id"], res["billingEnabled"])
+            project = Project(res["projectId"], res["billingEnabled"])
             projects.append(project)
 
         return projects
