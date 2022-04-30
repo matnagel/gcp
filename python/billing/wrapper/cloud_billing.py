@@ -25,9 +25,9 @@ class CloudBilling:
 
         nextToken = ""
         pages = 0
-        finished = False
+        is_unfinished = True
 
-        while finished and pages < 10:
+        while is_unfinished and pages < 10:
             request = billing_projects_api.list(
                 name=billing_id, pageToken=nextToken
             ).execute()
@@ -37,7 +37,7 @@ class CloudBilling:
             nextToken = request["nextPageToken"]
             print(f"Token: {nextToken}")
             if not nextToken:
-                finished = True
+                is_unfinished = False
             pages += 1
 
         return projects
