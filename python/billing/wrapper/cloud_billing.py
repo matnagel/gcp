@@ -3,6 +3,8 @@ import json
 from typing import List
 import googleapiclient.discovery as gdiscovery
 
+MAX_PAGES = 10
+
 
 @dataclass
 class Project:
@@ -27,7 +29,7 @@ class CloudBilling:
         pages = 0
         is_unfinished = True
 
-        while is_unfinished and pages < 10:
+        while is_unfinished and pages < MAX_PAGES:
             request = billing_projects_api.list(
                 name=billing_id, pageToken=nextToken
             ).execute()
@@ -35,7 +37,6 @@ class CloudBilling:
                 project = Project(res["projectId"], res["billingEnabled"])
                 projects.append(project)
             nextToken = request["nextPageToken"]
-            print(f"Token: {nextToken}")
             if not nextToken:
                 is_unfinished = False
             pages += 1
