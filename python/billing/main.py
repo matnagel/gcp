@@ -50,12 +50,6 @@ def check_billing(
         execute_on_projects(lambda p: disable_billing(cloud_billing, p), projects)
         return
 
-    if "alertThresholdExceeded" in info:
-        alert = info["alertThresholdExceeded"]
-        print(f"Alert threshold {alert} with costs {cost_amount} exceeded")
-        execute_on_projects(lambda p: disable_billing(cloud_billing, p), projects)
-        return
-
     print(f"No action necessary. Current cost are {cost_amount}.")
     for p in projects:
         print_billing_status(p)
