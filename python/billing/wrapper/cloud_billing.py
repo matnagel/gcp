@@ -53,5 +53,5 @@ class CloudBilling:
             print(f"Billing disabled: {json.dumps(res)}")
         except Exception as exception:
             raise RuntimeError(
-                "Failed to disable billing for project {project.project_id}, possibly check permissions"
+                f"Failed to disable billing for project {project.project_id}, possibly check permissions"
             ) from exception

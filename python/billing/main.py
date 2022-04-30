@@ -46,7 +46,9 @@ def check_billing(
     projects = cloud_billing.get_projects()
 
     if cost_amount > budget_amount:
-        print(f"Current costs: {cost_amount} are larger than budget {budget_amount}")
+        print(
+            f"Current costs of {cost_amount} are larger than the budget of {budget_amount}"
+        )
         execute_on_projects(lambda p: disable_billing(cloud_billing, p), projects)
         return
 
