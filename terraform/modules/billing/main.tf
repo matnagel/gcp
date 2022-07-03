@@ -35,7 +35,7 @@ resource "google_service_account" "check-billing" {
 resource "google_billing_account_iam_member" "admin-binding" {
   billing_account_id = var.billing-account
   role               = "roles/billing.admin"
-  member             = google_service_account.check-billing.email
+  member             = "serviceAccount:${google_service_account.check-billing.email}"
 }
 
 resource "google_cloudfunctions_function" "billing-nuke" {
