@@ -2,6 +2,10 @@ variable "command-project" {
 	type = string 
 }
 
+variable "webpage-project" { 
+	type = string 
+}
+
 variable "zone" { 
 	type = string 
 }
