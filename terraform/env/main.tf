@@ -15,3 +15,9 @@ module "billing" {
   billing-account = var.billing-account
   depends_on=[module.api_setup]
 }
+
+module "webpage" {
+  source      = "../modules/webpage"
+  project  = var.webpage-project
+  region = var.region
+}
