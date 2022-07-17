@@ -19,3 +19,7 @@ steps:
           name: 'hashicorp/terraform:1.1.7'
           entrypoint: 'sh'
           args: ['scripts/run-terraform.sh']
+artifacts:
+        objects:
+                location: "gs://command-center-configuration/terraform"
+                paths: ["terraform/env/.terraform.lock.hcl"]
