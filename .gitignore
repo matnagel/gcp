@@ -2,4 +2,6 @@
 .tox
 .vscode
 .env
+.terraform
+secrets
 __pycache__
