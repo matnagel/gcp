@@ -12,6 +12,9 @@ resource "google_storage_bucket" "website-resources" {
   location                    = var.region
   labels                      = {}
   uniform_bucket_level_access = true
+  versioning {
+    enabled = true
+  }
 }
 
 resource "google_storage_bucket" "website-configuration" {
@@ -20,6 +23,9 @@ resource "google_storage_bucket" "website-configuration" {
   location                    = var.region
   labels                      = {}
   uniform_bucket_level_access = true
+  versioning {
+    enabled = true
+  }
 }
 
 resource "google_storage_bucket" "website-tf-state" {
@@ -28,6 +34,9 @@ resource "google_storage_bucket" "website-tf-state" {
   location                    = var.region
   labels                      = {}
   uniform_bucket_level_access = true
+  versioning {
+    enabled = true
+  }
 }
 
 resource "google_project_service" "appengine_api" {
