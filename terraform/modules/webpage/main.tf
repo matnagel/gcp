@@ -17,6 +17,14 @@ resource "google_storage_bucket" "website-resources" {
   }
 }
 
+resource "google_storage_bucket" "website-deployment" {
+  name                        = "${var.project}-deployment"
+  project                     = var.project
+  location                    = var.region
+  labels                      = {}
+  uniform_bucket_level_access = true
+}
+
 resource "google_storage_bucket" "website-configuration" {
   name                        = "${var.project}-website-configuration"
   project                     = var.project
