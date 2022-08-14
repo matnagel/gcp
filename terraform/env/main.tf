@@ -21,3 +21,9 @@ module "webpage" {
   project  = var.webpage-project
   region = var.region
 }
+
+module "stockrecords" {
+  source      = "../modules/stockrecords"
+  project  = var.stockrecord-project
+  region = var.region
+}
