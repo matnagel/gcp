@@ -6,6 +6,10 @@ variable "webpage-project" {
 	type = string 
 }
 
+variable "stockrecord-project" { 
+	type = string 
+}
+
 variable "zone" { 
 	type = string 
 }
