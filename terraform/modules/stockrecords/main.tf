@@ -6,25 +6,6 @@ resource "google_storage_bucket" "build-logs-bucket" {
   uniform_bucket_level_access = true
 }
 
-resource "google_storage_bucket" "website-resources" {
-  name                        = "${var.project}-raw"
-  project                     = var.project
-  location                    = var.region
-  labels                      = {}
-  uniform_bucket_level_access = true
-  versioning {
-    enabled = true
-  }
-}
-
-resource "google_storage_bucket" "deployment" {
-  name                        = "${var.project}-deployment"
-  project                     = var.project
-  location                    = var.region
-  labels                      = {}
-  uniform_bucket_level_access = true
-}
-
 resource "google_storage_bucket" "configuration" {
   name                        = "${var.project}-configuration"
   project                     = var.project
