@@ -41,7 +41,7 @@ resource "google_billing_account_iam_member" "admin-binding" {
 resource "google_cloudfunctions_function" "billing-nuke" {
   name        = "billing-nuke"
   description = "Controls budget"
-  runtime     = "python38"
+  runtime     = "python312"
 
 
   max_instances = 1
