@@ -4,18 +4,18 @@ options:
 logsBucket: ${_BUILD_LOG_BUCKET}
 steps:
         - id: 'configuration'
-          name: 'google/cloud-sdk:495.0.0'
+          name: 'google/cloud-sdk:512.0.0'
           entrypoint: 'make'
           args: ['-f', 'scripts/configure-terraform.mk']
           env:
           - CONFIG_BUCKET=${_CONFIG_BUCKET}
 
         - id: 'build'
-          name: 'google/cloud-sdk:495.0.0'
+          name: 'google/cloud-sdk:512.0.0'
           entrypoint: 'sh'
           args: ['scripts/build-python.sh']
 
         - id: 'terraform'
-          name: 'hashicorp/terraform:1.9'
+          name: 'hashicorp/terraform:1.11'
           entrypoint: 'sh'
           args: ['scripts/run-terraform.sh']
