@@ -19,6 +19,12 @@ resource "google_project_service" "functions_api" {
 }
 
 # For billing nuke triggering
+resource "google_project_service" "run_api" {
+  project = var.project
+  service = "run.googleapis.com"
+}
+
+# For billing nuke triggering
 resource "google_project_service" "eventarc_api" {
   project = var.project
   service = "eventarc.googleapis.com"
