@@ -1,5 +1,5 @@
 locals {
-  deploy_zip = "/workspace/python/billing/billing_nuke.zip"
+  deploy_zip = "../../python/billing/billing_nuke.zip"
 }
 
 resource "google_pubsub_topic" "budget-topic" {

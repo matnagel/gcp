@@ -25,3 +25,11 @@ variable "region" {
 variable "billing-account" {
   type = string
 }
+
+variable "github-owner" {
+  type = string
+}
+
+variable "github-repo" {
+  type = string
+}

@@ -29,6 +29,9 @@ module "stockrecords" {
 }
 
 module "todo" {
-  source          = "../modules/todo"
-  project         = var.todo-project
+  source       = "../modules/todo"
+  project      = var.todo-project
+  region       = var.region
+  github-owner = var.github-owner
+  github-repo  = var.github-repo
 }

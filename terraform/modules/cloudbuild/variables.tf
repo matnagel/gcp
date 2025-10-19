@@ -1,5 +1,5 @@
 
-variable "project_id" {
+variable "project" {
   description = "The ID of the GCP project."
   type        = string
 }
@@ -9,17 +9,17 @@ variable "region" {
   type        = string
 }
 
-variable "github_owner" {
+variable "github-owner" {
   description = "The owner of the GitHub repository."
   type        = string
 }
 
-variable "github_repo" {
+variable "github-repo" {
   description = "The name of the GitHub repository."
   type        = string
 }
 
-variable "github_branch" {
+variable "github-branch" {
   description = "The branch of the GitHub repository to trigger builds from."
   type        = string
   default     = "main"
