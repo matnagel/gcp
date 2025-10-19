@@ -70,5 +70,6 @@ resource "google_cloudfunctions2_function" "billing-nuke" {
     trigger_region = var.region
     event_type     = "google.cloud.pubsub.topic.v1.messagePublished"
     pubsub_topic   = google_pubsub_topic.budget-topic.id
+    retry_policy   = "RETRY_POLICY_DO_NOT_RETRY"
   }
 }
