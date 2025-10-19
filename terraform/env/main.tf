@@ -27,3 +27,7 @@ module "stockrecords" {
   project = var.stockrecord-project
   region  = var.region
 }
+
+module "todo" {
+  source = "../modules/todo"
+}
