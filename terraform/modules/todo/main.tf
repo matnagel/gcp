@@ -1,5 +1,3 @@
-resource "google_project" "todo_project" {
-  name            = "todo app hosting"
+data "google_project" "project" {
   project_id      = var.project
-  billing_account = var.billing-account
 }

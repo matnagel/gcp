@@ -31,5 +31,4 @@ module "stockrecords" {
 module "todo" {
   source          = "../modules/todo"
   project         = var.todo-project
-  billing-account = var.billing-account
 }
