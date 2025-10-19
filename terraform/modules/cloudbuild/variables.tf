@@ -1,4 +1,3 @@
-
 variable "project" {
   description = "The ID of the GCP project."
   type        = string
@@ -23,4 +22,9 @@ variable "github-branch" {
   description = "The branch of the GitHub repository to trigger builds from."
   type        = string
   default     = "main"
+}
+
+variable "service_account" {
+  description = "The service account to use for the Cloud Build trigger."
+  type        = string
 }
