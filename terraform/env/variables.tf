@@ -30,6 +30,6 @@ variable "github-owner" {
   type = string
 }
 
-variable "github-repo" {
+variable "github-repo-todo" {
   type = string
 }
