@@ -33,5 +33,5 @@ module "todo" {
   project      = var.todo-project
   region       = var.region
   github-owner = var.github-owner
-  github-repo  = var.github-repo
+  github-repo  = var.github-repo-todo
 }
