@@ -1,4 +1,4 @@
-resource "google_storage_bucket" "build-logs-bucket" {
+resource "google_storage_bucket" "build_logs_bucket" {
   name                        = "${var.project}-build-logs"
   project                     = var.project
   location                    = var.region
@@ -17,7 +17,7 @@ resource "google_storage_bucket" "configuration" {
   }
 }
 
-resource "google_storage_bucket" "tf-state" {
+resource "google_storage_bucket" "tf_state" {
   name                        = "${var.project}-tf-state"
   project                     = var.project
   location                    = var.region
@@ -26,4 +26,14 @@ resource "google_storage_bucket" "tf-state" {
   versioning {
     enabled = true
   }
+}
+
+moved {
+  from = google_storage_bucket.build-logs-bucket
+  to   = google_storage_bucket.build_logs_bucket
+}
+
+moved {
+  from = google_storage_bucket.tf-state
+  to   = google_storage_bucket.tf_state
 }

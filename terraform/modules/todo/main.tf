@@ -15,5 +15,5 @@ module "cloudbuild" {
   region          = var.region
   github-owner    = var.github-owner
   github-repo     = var.github-repo
-  service_account = google_service_account.git_build.id
+  service-account = google_service_account.git_build.id
 }

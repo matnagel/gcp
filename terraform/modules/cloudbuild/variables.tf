@@ -24,7 +24,7 @@ variable "github-branch" {
   default     = "main"
 }
 
-variable "service_account" {
+variable "service-account" {
   description = "The service account to use for the Cloud Build trigger."
   type        = string
 }

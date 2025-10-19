@@ -19,5 +19,5 @@ resource "google_cloudbuild_trigger" "default" {
   }
 
   filename = "cloudbuild.yaml"
-  service_account = var.service_account
+  service_account = var.service-account
 }
