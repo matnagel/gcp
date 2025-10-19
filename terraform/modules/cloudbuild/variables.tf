@@ -22,5 +22,5 @@ variable "github-repo" {
 variable "github-branch" {
   description = "The branch of the GitHub repository to trigger builds from."
   type        = string
-  default     = "^main$"
+  default     = "main"
 }

@@ -14,7 +14,7 @@ resource "google_cloudbuild_trigger" "default" {
     owner = var.github-owner
     name  = var.github-repo
     push {
-      branch = var.github-branch
+      branch = "^${var.github-branch}$"
     }
   }
 
