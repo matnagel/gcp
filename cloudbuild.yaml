@@ -3,6 +3,13 @@ options:
   logging: GCS_ONLY
 logsBucket: ${_BUILD_LOG_BUCKET}
 steps:
+        - id: 'configuration'
+          name: 'google/cloud-sdk:543.0.0'
+          entrypoint: 'make'
+          args: ['-f', 'scripts/configure-terraform.mk']
+          env:
+          - CONFIG_BUCKET=${_CONFIG_BUCKET}
+
         - id: 'build'
           name: 'google/cloud-sdk:543.0.0'
           entrypoint: 'sh'
@@ -12,5 +19,3 @@ steps:
           name: 'hashicorp/terraform:1.13'
           entrypoint: 'sh'
           args: ['scripts/run-terraform.sh']
-          env:
-            - CONFIG_BUCKET=${_CONFIG_BUCKET}
