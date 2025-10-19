@@ -18,7 +18,6 @@
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
             gemini-cli
-	    terraform
           ];
 
           shellHook = ''

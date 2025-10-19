@@ -10,6 +10,10 @@ variable "stockrecord-project" {
   type = string
 }
 
+variable "todo-project" {
+  type = string
+}
+
 variable "zone" {
   type = string
 }

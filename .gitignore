@@ -3,5 +3,6 @@
 .vscode
 .env
 .terraform
+GEMINI.md
 secrets
 __pycache__
